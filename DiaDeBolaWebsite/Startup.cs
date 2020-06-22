@@ -28,16 +28,22 @@ namespace DiaDeBolaWebsite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            //options.UseSqlServer(
+                options.UseSqlite(
+                    Configuration.GetConnectionString("DefaultConnection"))
+                );
             services.AddDefaultIdentity<IdentityUser>(options => 
             { 
-                options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequiredUniqueChars = 0;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
+
+
+                options.SignIn.RequireConfirmedAccount = false;
+                options.SignIn.RequireConfirmedEmail = false;
+
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
