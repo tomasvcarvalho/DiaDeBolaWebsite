@@ -33,7 +33,7 @@ namespace DiaDeBolaWebsite.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "Numero de Telefone")]
             public string PhoneNumber { get; set; }
         }
 
