@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 
 namespace DiaDeBolaClassLibrary
 {
     public static class Factory
     {
-        public static ITeam CreateTeam(string teamName) 
+        public static ITeam CreateTeam(string teamName)
         {
             return new Team(teamName);
         }
 
-        public static IEvent CreateEvent(IAdmin admin) 
+        public static IEvent CreateEvent(IAdmin admin)
         {
             return new Event(admin);
         }
@@ -26,11 +28,27 @@ namespace DiaDeBolaClassLibrary
             return new Player(email);
         }
 
-        public static IMessageSender CreateMessageSender()
+        public static IMessageSender CreateMessageSender(MailAddress fromEmail)
         {
-            return new Emailer();
+            return new Emailer(fromEmail);
         }
 
+        public static MailAddress CreateMailAddress(string email, string displayName)
+        {
+            return new MailAddress(email, displayName);
+        }
 
+        public static SmtpClient CreateSmtpClient(string fromEmail, string fromPassword)
+        {
+            return new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromEmail, fromPassword)
+            };
+        }
     }
 }

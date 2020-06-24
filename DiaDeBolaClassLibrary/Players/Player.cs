@@ -11,6 +11,7 @@ namespace DiaDeBolaClassLibrary
         
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string FullName { get; set; }
         public string Email { get; set; }
         PlayerStatus IPlayer.Status { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -18,6 +19,11 @@ namespace DiaDeBolaClassLibrary
         {
             Email = email;
             Status = PlayerStatus.NotContacted;
+        }
+
+        public void SetFullName()
+        {
+            FullName = $"{FirstName} {LastName}";
         }
     }
 }

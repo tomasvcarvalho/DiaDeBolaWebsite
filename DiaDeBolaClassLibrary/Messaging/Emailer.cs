@@ -7,32 +7,23 @@ namespace DiaDeBolaClassLibrary
 {
     public class Emailer : IMessageSender
     {
-        MailAddress FromAddress = new MailAddress(EmailAddress, EmailName);
-        const string FromPassword = EmailPassword;
+        MailAddress FromAddress { get; set; }
+        string FromPassword { get; set; }
 
-        public Emailer() 
+        public Emailer(MailAddress fromAddress)
         {
-        
+            FromAddress = fromAddress;
+            FromPassword = EmailPassword;
         }
-        
-        public void SendConfirmationMessage(IPlayer player, string messageSubject, string messageBody)
+
+        public void SendMessage(IPlayer player, string messageSubject, string messageBody)
         {
-           
-            MailAddress toAddress = new MailAddress(player.Email, $"{player.FirstName} {player.LastName}");
-           
+            SmtpClient smtp = Factory.CreateSmtpClient(FromAddress.Address, FromPassword);
+            Console.WriteLine($"Sending message '{messageBody}' to {player.FirstName}");
 
-            Console.WriteLine($"Sending message '{messageBody}' to {player.Email}");
+            MailAddress toAddress = Factory.CreateMailAddress(player.Email, player.FullName);
 
-            var smtp = new SmtpClient
-            {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(FromAddress.Address, FromPassword)
-            };
-            using (var message = new MailMessage(FromAddress, toAddress)
+            using (MailMessage message = new MailMessage(FromAddress, toAddress)
             {
                 Subject = messageSubject,
                 Body = messageBody
