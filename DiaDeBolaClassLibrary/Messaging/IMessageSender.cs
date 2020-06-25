@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DiaDeBolaClassLibrary
+﻿namespace DiaDeBolaClassLibrary
 {
     public interface IMessageSender
     {

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DiaDeBolaClassLibrary
 {
@@ -11,7 +9,7 @@ namespace DiaDeBolaClassLibrary
         void SetNewMaxNumberOfPlayers(IEvent gameEvent, int newMaxNumberOfPlayers);
         void SetPlayerTeam(IEvent gameEvent, IPlayer player, ITeam team);
 
-        void SetNewGameLocation(IEvent gameEvent, ILocation newLocation);
+        void SetNewGameLocation(IEvent gameEvent, Location newLocation);
 
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DiaDeBolaClassLibrary
 {
@@ -11,6 +9,11 @@ namespace DiaDeBolaClassLibrary
         public string LastName { get; set; }
         public string Email { get; set; }
         public string FullName { get ; set ; }
+
+        public Admin()
+        {
+            Status = Enums.PlayerStatus.NotContacted;
+        }
 
         public Admin(string email) 
         {
@@ -23,7 +26,7 @@ namespace DiaDeBolaClassLibrary
             gameEvent.DateTime = newDateTime;
         }
 
-        public void SetNewGameLocation(IEvent gameEvent, ILocation newLocation)
+        public void SetNewGameLocation(IEvent gameEvent, Location newLocation)
         {
             gameEvent.Location = newLocation;
         }

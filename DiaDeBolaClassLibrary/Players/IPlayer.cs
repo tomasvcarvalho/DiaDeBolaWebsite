@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using static DiaDeBolaClassLibrary.Enums;
+﻿using static DiaDeBolaClassLibrary.Enums;
 
 namespace DiaDeBolaClassLibrary
 {

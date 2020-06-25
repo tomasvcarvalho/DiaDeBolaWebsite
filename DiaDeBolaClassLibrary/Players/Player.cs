@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using static DiaDeBolaClassLibrary.Enums;
+﻿using static DiaDeBolaClassLibrary.Enums;
 
 namespace DiaDeBolaClassLibrary
 {
@@ -13,7 +10,12 @@ namespace DiaDeBolaClassLibrary
         public string LastName { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
-        PlayerStatus IPlayer.Status { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        PlayerStatus IPlayer.Status { get; set; }
+
+        public Player()
+        {
+            Status = PlayerStatus.NotContacted;
+        }
 
         public Player(string email) 
         {

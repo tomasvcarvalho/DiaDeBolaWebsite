@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DiaDeBolaClassLibrary
 {
@@ -12,6 +9,12 @@ namespace DiaDeBolaClassLibrary
         public Enums.EquipmentColor EquipmentColor { get; set; }
 
         public int MaxNumberOfPlayers{ get; set; }
+
+        public Team()
+        {
+            Members = new List<IPlayer>();
+            EquipmentColor = Enums.EquipmentColor.NotAttributed;
+        }
 
         public Team(string name) 
         {

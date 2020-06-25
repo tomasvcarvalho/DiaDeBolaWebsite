@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 
 namespace DiaDeBolaClassLibrary
@@ -18,7 +17,7 @@ namespace DiaDeBolaClassLibrary
         public Event ToEvent() 
         {
             var gameAdmins = JsonSerializer.Deserialize<List<IAdmin>>(Admins);
-            var gameLocation = JsonSerializer.Deserialize<ILocation>(Location);
+            var gameLocation = JsonSerializer.Deserialize<Location>(Location);
             var gameTeams = JsonSerializer.Deserialize<List<ITeam>>(Teams);
             var teamsDict = gameTeams.ToDictionary(g => g.Name, g => g);
 

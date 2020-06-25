@@ -11,8 +11,10 @@ namespace DiaDeBolaClassLibrary
         public List<IAdmin> Admins { get; set; }
         public Dictionary<string, ITeam> Teams { get; set; }
         public DateTime DateTime { get; set ; }
-        public ILocation Location { get ; set ; }
-        
+        public Location Location { get ; set ; }
+
+        public Event() { }
+
         public Event(IEnumerable<IAdmin> admins) 
         {
             Admins = admins.ToList();
@@ -23,6 +25,21 @@ namespace DiaDeBolaClassLibrary
             {
                 AddPlayer(player);
             }
+        }
+
+        public void SetLocation(Location location)
+        {
+            Location = location;
+        }
+
+        public void SetMaxNumberOfPlayers(int maxNumberOfPlayers)
+        {
+            MaxNumberOfPlayers = maxNumberOfPlayers;
+        }
+
+        public void SetDateTime(DateTime dateTime)
+        {
+            DateTime = dateTime;
         }
 
         public ITeam GetPlayersTeam(IPlayer player)
