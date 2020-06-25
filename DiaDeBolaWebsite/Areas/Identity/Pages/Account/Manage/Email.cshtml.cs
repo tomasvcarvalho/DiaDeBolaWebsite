@@ -33,8 +33,6 @@ namespace DiaDeBolaWebsite.Areas.Identity.Pages.Account.Manage
 
         public string Email { get; set; }
 
-        public bool IsEmailConfirmed { get; set; }
-
         [TempData]
         public string StatusMessage { get; set; }
 
@@ -58,8 +56,6 @@ namespace DiaDeBolaWebsite.Areas.Identity.Pages.Account.Manage
             {
                 NewEmail = email,
             };
-
-            IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
         }
 
         public async Task<IActionResult> OnGetAsync()

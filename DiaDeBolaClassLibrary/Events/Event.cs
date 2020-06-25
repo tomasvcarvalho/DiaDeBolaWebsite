@@ -1,24 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DiaDeBolaClassLibrary
 {
     public class Event : IEvent
     {
+        public string Id { get; set; }
         public int MaxNumberOfPlayers { get; set; }
         public List<IAdmin> Admins { get; set; }
         public Dictionary<string, ITeam> Teams { get; set; }
         public DateTime DateTime { get; set ; }
         public ILocation Location { get ; set ; }
-
-
-        public Event(IAdmin admin) 
+        
+        public Event(IEnumerable<IAdmin> admins) 
         {
-            Admins = new List<IAdmin>() { admin };
+            Admins = admins.ToList();
             var unplacedPlayers = new Team(Constants.UnplacedPlayersTeamName);
             Teams = new Dictionary<string, ITeam>();
             Teams.Add(unplacedPlayers.Name, unplacedPlayers);
-            AddPlayer(admin);
+            foreach(IAdmin player in Admins)
+            {
+                AddPlayer(player);
+            }
         }
 
         public ITeam GetPlayersTeam(IPlayer player)

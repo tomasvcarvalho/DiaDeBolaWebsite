@@ -6,6 +6,7 @@ namespace DiaDeBolaClassLibrary
 {
     public interface IEvent
     {
+        string Id { get; set; }
         int MaxNumberOfPlayers { get; set; }
         List<IAdmin> Admins { get; set; }
         DateTime DateTime { get; set; }

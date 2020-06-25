@@ -48,6 +48,22 @@ namespace DiaDeBolaWebsite.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetEvents",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    MaxNumberOfPlayers = table.Column<int>(maxLength: 256, nullable: true),
+                    Admins = table.Column<string>(maxLength: 256, nullable: true),
+                    DateTime = table.Column<DateTime>(maxLength: 256, nullable: true),
+                    Location= table.Column<string>(maxLength: 256, nullable: true),
+                    Teams= table.Column<string>(maxLength: 256, nullable: true),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetEvents", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -184,6 +200,11 @@ namespace DiaDeBolaWebsite.Data.Migrations
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetEvents_Teams",
+                table: "AspNetEvents",
+                column: "Teams");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",

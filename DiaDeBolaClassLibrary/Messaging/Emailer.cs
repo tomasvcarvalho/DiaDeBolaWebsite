@@ -19,8 +19,6 @@ namespace DiaDeBolaClassLibrary
         public void SendMessage(IPlayer player, string messageSubject, string messageBody)
         {
             SmtpClient smtp = Factory.CreateSmtpClient(FromAddress.Address, FromPassword);
-            Console.WriteLine($"Sending message '{messageBody}' to {player.FirstName}");
-
             MailAddress toAddress = Factory.CreateMailAddress(player.Email, player.FullName);
 
             using (MailMessage message = new MailMessage(FromAddress, toAddress)
@@ -29,6 +27,7 @@ namespace DiaDeBolaClassLibrary
                 Body = messageBody
             })
             {
+                Console.WriteLine($"Sending message '{messageBody}' to {player.FirstName}");
                 smtp.Send(message);
             }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
@@ -13,9 +14,9 @@ namespace DiaDeBolaClassLibrary
             return new Team(teamName);
         }
 
-        public static IEvent CreateEvent(IAdmin admin)
+        public static IEvent CreateEvent(IEnumerable<IAdmin> admins)
         {
-            return new Event(admin);
+            return new Event(admins);
         }
 
         public static IAdmin CreateAdmin(string email)
@@ -50,5 +51,6 @@ namespace DiaDeBolaClassLibrary
                 Credentials = new NetworkCredential(fromEmail, fromPassword)
             };
         }
+
     }
 }
