@@ -21,5 +21,13 @@
             PlaysIfPossible,
             PlaysIfNeeded
         }
+
+        public enum EventStatus
+        {
+            Created, 
+            Confirmed,
+            Done,
+            Canceled
+        }
     }
 }

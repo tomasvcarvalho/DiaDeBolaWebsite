@@ -11,7 +11,7 @@ namespace DiaDeBolaClassLibrary
             return new Team(teamName);
         }
 
-        public static IEvent CreateEvent(IEnumerable<IAdmin> admins)
+        public static IEvent CreateEvent(IEnumerable<Admin> admins)
         {
             return new Event(admins);
         }

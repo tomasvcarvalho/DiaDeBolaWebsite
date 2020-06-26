@@ -19,10 +19,4 @@
     <ProjectReference Include="..\DiaDeBolaClassLibrary\DiaDeBolaClassLibrary.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Data\DiaDeBolaWebsite.sqlite">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

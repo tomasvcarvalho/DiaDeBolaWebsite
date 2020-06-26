@@ -51,12 +51,8 @@ namespace DiaDeBolaWebsite.Data.Migrations
                 name: "AspNetEvents",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
-                    MaxNumberOfPlayers = table.Column<int>(maxLength: 256, nullable: true),
-                    Admins = table.Column<string>(maxLength: 256, nullable: true),
-                    DateTime = table.Column<DateTime>(maxLength: 256, nullable: true),
-                    Location= table.Column<string>(maxLength: 256, nullable: true),
-                    Teams= table.Column<string>(maxLength: 256, nullable: true),
+                    Id = table.Column<int>(nullable: false).Annotation("Sqlite:Autoincrement", true),
+                    JsonEventContent = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -201,11 +197,7 @@ namespace DiaDeBolaWebsite.Data.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetEvents_Teams",
-                table: "AspNetEvents",
-                column: "Teams");
-
+            
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",

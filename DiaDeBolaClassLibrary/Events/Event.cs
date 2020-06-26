@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using static DiaDeBolaClassLibrary.Enums;
 
 namespace DiaDeBolaClassLibrary
 {
@@ -10,18 +12,22 @@ namespace DiaDeBolaClassLibrary
         public int MaxNumberOfPlayers { get; set; }
         public List<IAdmin> Admins { get; set; }
         public Dictionary<string, ITeam> Teams { get; set; }
-        public DateTime DateTime { get; set ; }
-        public Location Location { get ; set ; }
+        public DateTime DateTime { get; set; }
+        public Location Location { get ; set; }
+        public EventStatus Status { get; set; }
+
 
         public Event() { }
 
+        
         public Event(IEnumerable<IAdmin> admins) 
         {
             Admins = admins.ToList();
             var unplacedPlayers = new Team(Constants.UnplacedPlayersTeamName);
             Teams = new Dictionary<string, ITeam>();
             Teams.Add(unplacedPlayers.Name, unplacedPlayers);
-            foreach(IAdmin player in Admins)
+            Status = EventStatus.Created;
+            foreach (IAdmin player in Admins)
             {
                 AddPlayer(player);
             }
@@ -40,6 +46,11 @@ namespace DiaDeBolaClassLibrary
         public void SetDateTime(DateTime dateTime)
         {
             DateTime = dateTime;
+        }
+
+        public void SetEventStatus(EventStatus status)
+        {
+            Status = status;
         }
 
         public ITeam GetPlayersTeam(IPlayer player)
@@ -98,6 +109,14 @@ namespace DiaDeBolaClassLibrary
             {
                 team.RemovePlayer(player);
             }
+        }
+
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(this, new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            });
         }
     }
 }

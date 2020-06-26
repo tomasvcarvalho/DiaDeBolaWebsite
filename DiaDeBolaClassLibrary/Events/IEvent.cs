@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static DiaDeBolaClassLibrary.Enums;
 
 namespace DiaDeBolaClassLibrary
 {
@@ -11,6 +12,7 @@ namespace DiaDeBolaClassLibrary
         DateTime DateTime { get; set; }
         Location Location { get; set; }
         Dictionary<string, ITeam> Teams { get; set; }
+        EventStatus Status { get; set; }
 
         public bool IsPlayerInEvent(IPlayer player);
         public ITeam GetPlayersTeam(IPlayer player);
@@ -18,5 +20,6 @@ namespace DiaDeBolaClassLibrary
         public void RemoveTeam(ITeam team);
         public void AddPlayer(IPlayer player);
         public void RemovePlayer(IPlayer player);
+        public string ToJson();
     }
 }
