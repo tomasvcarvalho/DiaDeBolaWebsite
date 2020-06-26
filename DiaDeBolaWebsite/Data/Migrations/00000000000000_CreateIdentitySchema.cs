@@ -48,6 +48,19 @@ namespace DiaDeBolaWebsite.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetContacts",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    ListOwner = table.Column<string>(maxLength: 256, nullable: true),
+                    Contact = table.Column<string>(maxLength: 256, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetContacts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetEvents",
                 columns: table => new
                 {
@@ -204,6 +217,11 @@ namespace DiaDeBolaWebsite.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContactListOwner",
+                table: "AspNetContacts",
+                column: "ListOwner");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

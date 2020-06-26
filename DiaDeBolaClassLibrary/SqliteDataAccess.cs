@@ -30,5 +30,26 @@ namespace DiaDeBolaClassLibrary
                     "(@serializedEvent)", new { serializedEvent } );
             }
         }
+
+        public static List<string> LoadContacts(string connectionString, IRegisteredUser user)
+        {
+            using (IDbConnection cnn = new SqliteConnection(connectionString))
+            {
+                var output = cnn.Query<string>("SELECT Contact FROM AspNetContacts WHERE ListOwner = '@Email'", user);
+                return output.ToList();
+            }
+        }
+
+        public static void SaveContact(string connectionString, IRegisteredUser user, string contactToSave)
+        {
+            
+            using (IDbConnection cnn = new SqliteConnection(connectionString))
+            {
+                cnn.Execute("INSERT INTO AspNetContacts " +
+                    "(ListOwner,Contact) " +
+                    "values " +
+                    "(@Email, @NewContact)", new { user.Email, NewContact = contactToSave});
+            }
+        }
     }
 }

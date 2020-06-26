@@ -3,17 +3,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace DiaDeBolaWebsite.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ApplicationUserManager _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            ApplicationUserManager userManager,
+            SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -29,12 +30,19 @@ namespace DiaDeBolaWebsite.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+
+            [Display(Name = "Nome Proprio")]
+            public string FirstName { get; set; }
+
+            [Display(Name = "Apelido")]
+            public string LastName { get; set; }
+
             [Phone]
             [Display(Name = "Numero de Telefone")]
             public string PhoneNumber { get; set; }
         }
 
-        private async Task LoadAsync(IdentityUser user)
+        private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
@@ -83,6 +91,29 @@ namespace DiaDeBolaWebsite.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+
+            var firstName = await _userManager.GetFirstNameAsync(user);
+            if (Input.FirstName != firstName)
+            {
+                var setFirstNameResult = await _userManager.SetFirstNameAsync(user, Input.FirstName);
+                if (!setFirstNameResult.Succeeded)
+                {
+                    StatusMessage = "Unexpected error when trying to set first name.";
+                    return RedirectToPage();
+                }
+            }
+
+            var lastName = await _userManager.GetLastNameAsync(user);
+            if (Input.LastName != firstName)
+            {
+                var setLastNameResult = await _userManager.SetLastNameAsync(user, Input.LastName);
+                if (!setLastNameResult.Succeeded)
+                {
+                    StatusMessage = "Unexpected error when trying to set last name.";
+                    return RedirectToPage();
+                }
+            }
+
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";

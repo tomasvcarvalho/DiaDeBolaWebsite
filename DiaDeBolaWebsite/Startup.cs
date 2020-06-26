@@ -26,7 +26,7 @@ namespace DiaDeBolaWebsite
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection"))
                 );
-            services.AddDefaultIdentity<IdentityUser>(options => 
+            services.AddDefaultIdentity<ApplicationUser>(options => 
             { 
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
@@ -39,7 +39,9 @@ namespace DiaDeBolaWebsite
                 options.SignIn.RequireConfirmedEmail = false;
 
             })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddUserManager<ApplicationUserManager>();
+
             services.AddRazorPages();
         }
 
