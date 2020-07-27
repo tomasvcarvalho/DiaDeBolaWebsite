@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using DiaDeBolaCore.Dtos;
 using DiaDeBolaCore.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +18,12 @@ namespace DiaDeBolaCore.Controllers.Api
     {
         private readonly ILogger<EventsController> _logger;
         private ApplicationDbContext _context;
+        private IMapper _mapper;
 
 
-        public EventsController(ILogger<EventsController> logger, ApplicationDbContext context)
+        public EventsController(ILogger<EventsController> logger, IMapper mapper, ApplicationDbContext context)
         {
+            _mapper = mapper;
             _logger = logger;
             _context = context;
         }
@@ -41,6 +45,21 @@ namespace DiaDeBolaCore.Controllers.Api
                     (teamsInEvent, playersInTeam) => new { teamsInEvent, playersInTeam }
                 ).ToList();
 
+
+            return Ok(_context.Events.ToList());
+        }
+
+        public IActionResult CreateEvent(EventDto eventDto)
+        {
+            if (eventDto == null)
+                return BadRequest();
+
+
+            var eventToSave = _mapper.Map<EventDto, Event>(eventDto);
+
+            _context.Events.Add(eventToSave);
+
+            _context.SaveChanges();
 
             return Ok(_context.Events.ToList());
         }

@@ -10,9 +10,9 @@ namespace DiaDeBolaCore.Models
         public int Id { get; set; }
         public int MaxNumberOfPlayers { get; set; }
         public DateTime DateTime { get; set; }
-        public Location Location { get ; set; }
-        public EventStatus Status { get; set; }
-        public int StatusId { get; set; }
+        public string Location { get ; set; }
+        public EventStatus EventStatus { get; set; }
+        public int EventStatusId { get; set; }
 
     }
 }
