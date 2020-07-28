@@ -60,7 +60,6 @@ namespace DiaDeBolaCore.Controllers
             else
             {
                 var eventInDb = _context.Events.Single(c => c.Id == oevent.Id);
-
                 _mapper.Map(oevent, eventInDb);
             }
 

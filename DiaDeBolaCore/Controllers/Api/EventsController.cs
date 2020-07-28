@@ -28,12 +28,16 @@ namespace DiaDeBolaCore.Controllers.Api
             _context = context;
         }
 
-
+        [HttpGet]
+        // GET api/events/
         public IActionResult GetEvents() 
         {
             return Ok(_context.Events.ToList());
         }
 
+
+        [HttpGet]
+        // GET api/events/1
         public IActionResult GetPlayersInEvent(int id)
         {
 
@@ -49,6 +53,8 @@ namespace DiaDeBolaCore.Controllers.Api
             return Ok(_context.Events.ToList());
         }
 
+        [HttpPost]
+        // POST api/events/
         public IActionResult CreateEvent(EventDto eventDto)
         {
             if (eventDto == null)

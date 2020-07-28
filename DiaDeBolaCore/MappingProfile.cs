@@ -11,7 +11,17 @@ namespace DiaDeBolaCore
         {
             // Add as many of these lines as you need to map your objects
             CreateMap<Event, EventDto>();
+            CreateMap<ApplicationUser, ApplicationUserDto>();
+            CreateMap<Contact, ContactDto>();
+            CreateMap<EventStatus, EventStatusDto>();
+            CreateMap<Location, LocationDto>();
+
+
             CreateMap<EventDto, Event>();
+            CreateMap<ApplicationUserDto, ApplicationUser>();
+            CreateMap<ContactDto, Contact>();
+            CreateMap<EventStatusDto, EventStatus>();
+            CreateMap<LocationDto, Location>();
         }
     }
 }
