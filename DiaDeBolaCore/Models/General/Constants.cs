@@ -8,5 +8,7 @@
         public const string EmailAddress = "dia.de.bola.website@gmail.com";
         public const string EmailPassword = "DiaDeBola.1";
 
+        public const string EventStatusCreated = "Created";
+
     }
 }

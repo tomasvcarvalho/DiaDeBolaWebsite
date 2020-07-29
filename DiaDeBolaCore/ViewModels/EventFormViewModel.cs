@@ -11,12 +11,15 @@ namespace DiaDeBolaCore.ViewModels
     {
         public int? Id { get; set; }
 
-        [Required]
+        public string Name { get; set; }
+
         [DisplayName("Number of Players")]
+        [Required]
         public int? MaxNumberOfPlayers { get; set; }
 
+        [DisplayName("Date and Time")]
         [Required]
-        [DisplayName("Event DateTime")]
+        [DataType(DataType.DateTime)]
         public DateTime? DateTime { get; set; }
 
         [Required]
@@ -27,6 +30,8 @@ namespace DiaDeBolaCore.ViewModels
         [Required]
         public int? EventStatusId { get; set; }
 
+        public List<Team> Teams { get; set; }
+
         public string Title
         {
             get
@@ -34,7 +39,6 @@ namespace DiaDeBolaCore.ViewModels
                 return Id != 0 ? "Edit Event" : "New Event";
             }
         }
-
 
         public EventFormViewModel()
         {
@@ -44,12 +48,12 @@ namespace DiaDeBolaCore.ViewModels
         public EventFormViewModel(Event oevent)
         {
             Id = oevent.Id;
+            Name = oevent.Name;
             MaxNumberOfPlayers = oevent.MaxNumberOfPlayers;
             DateTime = oevent.DateTime;
             Location = oevent.Location;
-            EventStatusId = oevent.EventStatusId;
+            EventStatusId = oevent.EventStatus.Id;
+            Teams = oevent.Teams;
         }
-
-        
     }
 }

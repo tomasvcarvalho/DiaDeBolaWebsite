@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiaDeBolaCore.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ namespace DiaDeBolaCore.Dtos
         public string UserId { get; set; }
         public ApplicationUserDto User { get; set; }
         public string FriendId { get; set; }
+
+        [ExistingUser]
         public ApplicationUserDto Friend { get; set; }
 
     }

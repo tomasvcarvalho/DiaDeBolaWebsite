@@ -4,14 +4,16 @@ using DiaDeBolaCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DiaDeBolaCore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200729095808_AddedNameToEventClass")]
+    partial class AddedNameToEventClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,21 +187,46 @@ namespace DiaDeBolaCore.Data.Migrations
                     b.Property<int?>("StatusId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TeamId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("UserId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("StatusId");
 
-                    b.HasIndex("TeamId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Players");
+                });
+
+            modelBuilder.Entity("DiaDeBolaCore.Models.PlayerInTeam", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("PlayerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("PlayerStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerId");
+
+                    b.HasIndex("PlayerStatusId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("PlayersInTeam");
                 });
 
             modelBuilder.Entity("DiaDeBolaCore.Models.PlayerStatus", b =>
@@ -224,10 +251,7 @@ namespace DiaDeBolaCore.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("EquipmentColorId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EventId")
+                    b.Property<int>("EquipmentColorId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -237,9 +261,29 @@ namespace DiaDeBolaCore.Data.Migrations
 
                     b.HasIndex("EquipmentColorId");
 
+                    b.ToTable("Teams");
+                });
+
+            modelBuilder.Entity("DiaDeBolaCore.Models.TeamInEvent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
                     b.HasIndex("EventId");
 
-                    b.ToTable("Teams");
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("TeamsInEvent");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -407,24 +451,44 @@ namespace DiaDeBolaCore.Data.Migrations
                         .WithMany()
                         .HasForeignKey("StatusId");
 
-                    b.HasOne("DiaDeBolaCore.Models.Team", null)
-                        .WithMany("Players")
-                        .HasForeignKey("TeamId");
-
                     b.HasOne("DiaDeBolaCore.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId1");
+                });
+
+            modelBuilder.Entity("DiaDeBolaCore.Models.PlayerInTeam", b =>
+                {
+                    b.HasOne("DiaDeBolaCore.Models.ApplicationUser", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId");
+
+                    b.HasOne("DiaDeBolaCore.Models.PlayerStatus", "PlayerStatus")
+                        .WithMany()
+                        .HasForeignKey("PlayerStatusId");
+
+                    b.HasOne("DiaDeBolaCore.Models.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamId");
                 });
 
             modelBuilder.Entity("DiaDeBolaCore.Models.Team", b =>
                 {
                     b.HasOne("DiaDeBolaCore.Models.EquipmentColor", "EquipmentColor")
                         .WithMany()
-                        .HasForeignKey("EquipmentColorId");
+                        .HasForeignKey("EquipmentColorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.HasOne("DiaDeBolaCore.Models.Event", null)
-                        .WithMany("Teams")
+            modelBuilder.Entity("DiaDeBolaCore.Models.TeamInEvent", b =>
+                {
+                    b.HasOne("DiaDeBolaCore.Models.Event", "Event")
+                        .WithMany()
                         .HasForeignKey("EventId");
+
+                    b.HasOne("DiaDeBolaCore.Models.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

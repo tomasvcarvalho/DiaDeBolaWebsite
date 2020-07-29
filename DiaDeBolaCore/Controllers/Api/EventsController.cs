@@ -6,6 +6,7 @@ using AutoMapper;
 using DiaDeBolaCore.Dtos;
 using DiaDeBolaCore.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -19,13 +20,14 @@ namespace DiaDeBolaCore.Controllers.Api
         private readonly ILogger<EventsController> _logger;
         private ApplicationDbContext _context;
         private IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-
-        public EventsController(ILogger<EventsController> logger, IMapper mapper, ApplicationDbContext context)
+        public EventsController(ILogger<EventsController> logger, IMapper mapper, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _mapper = mapper;
             _logger = logger;
             _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -36,21 +38,20 @@ namespace DiaDeBolaCore.Controllers.Api
         }
 
 
-        [HttpGet]
+        [HttpGet("{id}")]
         // GET api/events/1
-        public IActionResult GetPlayersInEvent(int id)
+        public IActionResult GetEvents(string id)
         {
+            var userEvents = _context.Events
+                .Include(e => e.EventStatus)
+                .Where(e => e.Teams
+                    .Where(t => t.Players
+                        .Where(p => p.User.Id == id).Count() > 0).Count() > 0)
+                .ToList();
 
-            var playersData = _context.TeamsInEvent
-                .Join(
-                    _context.PlayersInTeam,
-                    teamsInEvent => teamsInEvent.Team.Id,
-                    playersInTeam => playersInTeam.Team.Id,
-                    (teamsInEvent, playersInTeam) => new { teamsInEvent, playersInTeam }
-                ).ToList();
+            var userEventDtos = userEvents.Select(_mapper.Map<Event, EventDto>);
 
-
-            return Ok(_context.Events.ToList());
+            return Ok(userEventDtos);
         }
 
         [HttpPost]
@@ -68,6 +69,21 @@ namespace DiaDeBolaCore.Controllers.Api
             _context.SaveChanges();
 
             return Ok(_context.Events.ToList());
+        }
+
+
+        // DELETE /api/contacts/Id
+        [HttpDelete("{id:int}")]
+        public IActionResult DeleteContact(int id)
+        {
+            var eventInDb = _context.Contacts.SingleOrDefault(c => c.Id == id);
+
+            if (eventInDb == null)
+                return NotFound();
+
+            _context.Contacts.Remove(eventInDb);
+            _context.SaveChanges();
+            return Ok();
         }
 
     }

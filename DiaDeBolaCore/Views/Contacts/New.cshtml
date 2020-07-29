@@ -2,7 +2,9 @@
 @{
     ViewBag.Title = "New Contact";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
+
 
 <h2>@ViewBag.Title</h2>
 
@@ -13,7 +15,7 @@
     <div class="form-group">
         @Html.LabelFor(m => m.Friend.Email)
         @Html.TextBoxFor(m => m.Friend.Email, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Friend.Email)
+        @Html.ValidationMessageFor(m => m.Friend)
     </div>
 
     @Html.HiddenFor(m => m.Id)

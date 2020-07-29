@@ -41,7 +41,7 @@ namespace DiaDeBolaCore.Controllers
                .Select(_mapper.Map<Contact, ContactDto>);
 
 
-            return View(userContactDtos);
+            return View("List", userContactDtos);
         }
 
         
@@ -54,6 +54,11 @@ namespace DiaDeBolaCore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Save(ContactDto contactDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("New", contactDto);
+            }
+
             var user = await _userManager.GetUserAsync(User);
 
             var userContacts = _context.Contacts
@@ -77,8 +82,5 @@ namespace DiaDeBolaCore.Controllers
             
             return RedirectToAction("Index", "Contacts");
         }
-
-
-
     }
 }

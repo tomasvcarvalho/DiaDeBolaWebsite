@@ -4,14 +4,16 @@ using DiaDeBolaCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DiaDeBolaCore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200729104258_UndoingAttemptToChangeTeamEvents")]
+    partial class UndoingAttemptToChangeTeamEvents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,7 +143,7 @@ namespace DiaDeBolaCore.Data.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EventStatusId")
+                    b.Property<int?>("EventStatusId")
                         .HasColumnType("int");
 
                     b.Property<string>("Location")
@@ -185,17 +187,12 @@ namespace DiaDeBolaCore.Data.Migrations
                     b.Property<int?>("StatusId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TeamId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("StatusId");
-
-                    b.HasIndex("TeamId");
 
                     b.HasIndex("UserId");
 
@@ -227,17 +224,12 @@ namespace DiaDeBolaCore.Data.Migrations
                     b.Property<int?>("EquipmentColorId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EventId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EquipmentColorId");
-
-                    b.HasIndex("EventId");
 
                     b.ToTable("Teams");
                 });
@@ -396,9 +388,7 @@ namespace DiaDeBolaCore.Data.Migrations
                 {
                     b.HasOne("DiaDeBolaCore.Models.EventStatus", "EventStatus")
                         .WithMany()
-                        .HasForeignKey("EventStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EventStatusId");
                 });
 
             modelBuilder.Entity("DiaDeBolaCore.Models.Player", b =>
@@ -406,10 +396,6 @@ namespace DiaDeBolaCore.Data.Migrations
                     b.HasOne("DiaDeBolaCore.Models.PlayerStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId");
-
-                    b.HasOne("DiaDeBolaCore.Models.Team", null)
-                        .WithMany("Players")
-                        .HasForeignKey("TeamId");
 
                     b.HasOne("DiaDeBolaCore.Models.ApplicationUser", "User")
                         .WithMany()
@@ -421,10 +407,6 @@ namespace DiaDeBolaCore.Data.Migrations
                     b.HasOne("DiaDeBolaCore.Models.EquipmentColor", "EquipmentColor")
                         .WithMany()
                         .HasForeignKey("EquipmentColorId");
-
-                    b.HasOne("DiaDeBolaCore.Models.Event", null)
-                        .WithMany("Teams")
-                        .HasForeignKey("EventId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

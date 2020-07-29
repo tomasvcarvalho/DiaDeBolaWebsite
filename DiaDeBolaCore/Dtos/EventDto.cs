@@ -11,14 +11,18 @@ namespace DiaDeBolaCore.Dtos
     {
         
         public int Id { get; set; }
+
+        public string Name { get; set; }
+
         [Required]
         public int MaxNumberOfPlayers { get; set; }
         
         public DateTime DateTime { get; set; }
+
+        public string Location { get; set; }
+
         [Required]
-        public LocationDto Location { get; set; }
-        [Required]
-        public EventStatusDto Status { get; set; }
-        public int StatusId { get; set; }
+        public EventStatusDto EventStatus { get; set; }
+        public int EventStatusId { get; set; }
     }
 }

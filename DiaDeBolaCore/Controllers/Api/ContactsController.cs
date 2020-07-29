@@ -31,14 +31,13 @@ namespace DiaDeBolaCore.Controllers.Api
             _userManager = userManager;
         }
 
-        // GET /api/contacts/Id
-        public async Task<IActionResult> GetContacts() 
+        // GET /api/contacts/id
+        [HttpGet("{id}")]
+        public IActionResult GetContacts(string id) 
         {
-            var user = await _userManager.GetUserAsync(User);
-
             var userContacts = _context.Contacts
                 .Include(u => u.Friend)
-                .Where(u => u.User.Id == user.Id)
+                .Where(u => u.User.Id == id)
                 .ToList();
 
             var userContactDtos = userContacts
@@ -52,6 +51,13 @@ namespace DiaDeBolaCore.Controllers.Api
         [HttpPost]
         public IActionResult CreateContact(ContactDto contactDto)
         {
+            var existingUsers = _context.WebsiteUsers
+               .Where(u => u.Email == contactDto.Friend.Email)
+               .ToList();
+
+            if (existingUsers.Count == 0)
+                return BadRequest("Contact is not registered in DiaDeBola.");
+
             var userContacts = _context.Contacts
                 .Where(u => u.User.Id == contactDto.UserId && u.Friend.Id == contactDto.FriendId)
                 .ToList();
