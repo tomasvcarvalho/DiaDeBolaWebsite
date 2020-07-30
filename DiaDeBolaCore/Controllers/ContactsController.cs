@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DiaDeBolaCore.Dtos;
 using DiaDeBolaCore.Models;
+using DiaDeBolaCore.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -52,24 +53,32 @@ namespace DiaDeBolaCore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Save(ContactDto contactDto)
+        public async Task<IActionResult> Save(ContactFormViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                return View("New", contactDto);
+                var newViewModel = new ContactFormViewModel()
+                {
+                    User = viewModel.User,
+                    UserId = viewModel.UserId,
+                    FriendEmail = viewModel.FriendEmail
+                };
+
+
+                return View("New", viewModel);
             }
 
             var user = await _userManager.GetUserAsync(User);
 
             var userContacts = _context.Contacts
-                .Where(u => u.User.Id == user.Id && u.Friend.Id == contactDto.FriendId)
+                .Where(u => u.User.Id == user.Id && u.Friend.Email == viewModel.FriendEmail)
                 .ToList();
 
             if (userContacts.Count > 0)
                 return BadRequest("Contact already exists.");
 
             var friend = _context.WebsiteUsers
-                .SingleOrDefault(u => u.Email == contactDto.Friend.Email);
+                .SingleOrDefault(u => u.Email == viewModel.FriendEmail);
 
             var contact = new Contact() 
             { 

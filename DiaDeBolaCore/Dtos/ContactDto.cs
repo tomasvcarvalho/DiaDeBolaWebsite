@@ -12,8 +12,6 @@ namespace DiaDeBolaCore.Dtos
         public string UserId { get; set; }
         public ApplicationUserDto User { get; set; }
         public string FriendId { get; set; }
-
-        [ExistingUser]
         public ApplicationUserDto Friend { get; set; }
 
     }

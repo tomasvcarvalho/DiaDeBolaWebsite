@@ -10,5 +10,7 @@
 
         public const string EventStatusCreated = "Created";
 
+        public const string PlayerStatusToBeConfirmed = "To be confirmed";
+
     }
 }

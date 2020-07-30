@@ -85,7 +85,7 @@ namespace DiaDeBolaCore.Controllers
             if (oevent.Id == 0)
             {
                 var user = await _userManager.GetUserAsync(User);
-                oevent.EventStatus = _context.EventStatus.SingleOrDefault(es => es.Id == 1);
+                oevent.EventStatus = _context.EventStatus.SingleOrDefault(es => es.Name == Constants.EventStatusCreated);
                 oevent.Teams = new List<Team>()
                 {
                     new Team()
@@ -96,7 +96,7 @@ namespace DiaDeBolaCore.Controllers
                             new Player()
                             {
                                 User = user,
-                                Status = _context.PlayerStatus.SingleOrDefault(ps => ps.Id == 1)
+                                Status = _context.PlayerStatus.SingleOrDefault(ps => ps.Name == Constants.PlayerStatusToBeConfirmed)
                             }
                         }
                     },

@@ -1,4 +1,4 @@
-﻿@model ContactDto
+﻿@model ContactFormViewModel
 @{
     ViewBag.Title = "New Contact";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -13,9 +13,9 @@
     @Html.ValidationSummary(true, "Please fix the following errors.")
 
     <div class="form-group">
-        @Html.LabelFor(m => m.Friend.Email)
-        @Html.TextBoxFor(m => m.Friend.Email, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.Friend)
+        @Html.LabelFor(m => m.FriendEmail)
+        @Html.TextBoxFor(m => m.FriendEmail, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.FriendEmail)
     </div>
 
     @Html.HiddenFor(m => m.Id)
