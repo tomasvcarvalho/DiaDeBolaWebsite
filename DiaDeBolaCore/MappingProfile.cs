@@ -13,6 +13,7 @@ namespace DiaDeBolaCore
             CreateMap<Event, EventDto>();
             CreateMap<ApplicationUser, ApplicationUserDto>();
             CreateMap<Contact, ContactDto>();
+            CreateMap<ContactList, ContactListDto>();
             CreateMap<EventStatus, EventStatusDto>();
             CreateMap<Location, LocationDto>();
 
@@ -20,6 +21,7 @@ namespace DiaDeBolaCore
             CreateMap<EventDto, Event>();
             CreateMap<ApplicationUserDto, ApplicationUser>();
             CreateMap<ContactDto, Contact>();
+            CreateMap<ContactListDto, ContactList>();
             CreateMap<EventStatusDto, EventStatus>();
             CreateMap<LocationDto, Location>();
         }

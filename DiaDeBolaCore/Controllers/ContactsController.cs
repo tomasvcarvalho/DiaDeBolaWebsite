@@ -48,7 +48,7 @@ namespace DiaDeBolaCore.Controllers
         
         public IActionResult New()
         {
-            return View();
+            return View("ContactForm");
         }
 
         [HttpPost]
@@ -63,12 +63,13 @@ namespace DiaDeBolaCore.Controllers
                     UserId = viewModel.UserId,
                     FriendEmail = viewModel.FriendEmail
                 };
-
-
-                return View("New", viewModel);
+                return View("ContactForm", viewModel);
             }
 
             var user = await _userManager.GetUserAsync(User);
+
+            if (user.Email == viewModel.FriendEmail)
+                return BadRequest("User cannot add itself as a contact.");
 
             var userContacts = _context.Contacts
                 .Where(u => u.User.Id == user.Id && u.Friend.Email == viewModel.FriendEmail)

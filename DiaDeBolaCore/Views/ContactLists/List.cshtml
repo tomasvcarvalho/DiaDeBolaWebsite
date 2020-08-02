@@ -1,0 +1,70 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var user = await UserManager.GetUserAsync(User);
+}
+
+<h2>Contacts</h2>
+<p>
+    @Html.ActionLink("New Contact List", "New", "ContactLists", null, new { @class = "btn btn-primary" })
+</p>
+<table id="contactLists" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Number of elements</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var table = $("#contacts").DataTable({
+                ajax: {
+                    url: "/api/contactLists/".concat("@user.Id"),
+                    dataSrc : ""
+                },
+                columns: [
+                    {
+                        data: "name",
+                    },
+                    {
+                        data: "numberOfElements",
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-delete' data-contact-list-id=" + data + ">Delete</button>";
+                        }
+                    },
+                ]
+            });
+
+
+
+            $("#contactLists").on("click", ".js-delete", function () {
+                var button = $(this);
+
+                bootbox.confirm("Are you sure you want to delete this contact?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/contactLists/" + button.attr("data-contact-list-id"),
+                            method: "DELETE",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

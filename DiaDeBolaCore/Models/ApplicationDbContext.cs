@@ -17,6 +17,7 @@ namespace DiaDeBolaCore.Models
         public DbSet<PlayerStatus> PlayerStatus { get; set; }
         public DbSet<EquipmentColor> EquipmentColors { get; set; }
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<ContactList> ContactLists { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
