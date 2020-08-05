@@ -1,6 +1,4 @@
-using System;
-
-namespace DiaDeBolaCore.Models
+namespace DiaDeBolaCore.ViewModels
 {
     public class ErrorViewModel
     {

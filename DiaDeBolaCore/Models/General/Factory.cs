@@ -1,6 +1,4 @@
-﻿using DiaDeBolaCore.Data;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 
 namespace DiaDeBolaCore.Models
@@ -9,7 +7,7 @@ namespace DiaDeBolaCore.Models
     {
         public static Team CreateTeam(string teamName)
         {
-            return new Team() 
+            return new Team()
             {
                 Name = teamName
             };
@@ -20,7 +18,7 @@ namespace DiaDeBolaCore.Models
             return new Event();
         }
 
-        
+
         public static Player CreatePlayer()
         {
             return new Player();

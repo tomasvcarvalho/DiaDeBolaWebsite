@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DiaDeBolaCore.Dtos;
 using DiaDeBolaCore.Models;
 using DiaDeBolaCore.ViewModels;
@@ -10,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DiaDeBolaCore.Controllers
 {
@@ -18,8 +16,8 @@ namespace DiaDeBolaCore.Controllers
     {
 
         private readonly ILogger<ContactsController> _logger;
-        private ApplicationDbContext _context;
-        private IMapper _mapper;
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public ContactsController(ILogger<ContactsController> logger, IMapper mapper, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
@@ -28,7 +26,7 @@ namespace DiaDeBolaCore.Controllers
             _logger = logger;
             _context = context;
             _userManager = userManager;
-    }
+        }
 
         public async Task<IActionResult> Index()
         {
@@ -45,7 +43,7 @@ namespace DiaDeBolaCore.Controllers
             return View("List", userContactDtos);
         }
 
-        
+
         public IActionResult New()
         {
             return View("ContactForm");
@@ -81,15 +79,15 @@ namespace DiaDeBolaCore.Controllers
             var friend = _context.WebsiteUsers
                 .SingleOrDefault(u => u.Email == viewModel.FriendEmail);
 
-            var contact = new Contact() 
-            { 
+            var contact = new Contact()
+            {
                 User = user,
                 Friend = friend
             };
 
             _context.Contacts.Add(contact);
             _context.SaveChanges();
-            
+
             return RedirectToAction("Index", "Contacts");
         }
     }

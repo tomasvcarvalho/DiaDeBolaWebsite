@@ -1,8 +1,5 @@
 ﻿using DiaDeBolaCore.Dtos;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DiaDeBolaCore.ViewModels
 {
@@ -10,8 +7,6 @@ namespace DiaDeBolaCore.ViewModels
     {
         public int? Id { get; set; }
         public string Name { get; set; }
-        public List<ContactDto> ContactDtos { get; set; }
-
         public List<ContactDto> ContactDtos { get; set; }
 
         public ContactListsFormViewModel()

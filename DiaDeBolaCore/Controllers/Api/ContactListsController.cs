@@ -1,56 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using DiaDeBolaCore.Data.Migrations;
+﻿using AutoMapper;
 using DiaDeBolaCore.Dtos;
 using DiaDeBolaCore.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace DiaDeBolaCore.Controllers.Api
 {
-   
+
     [Route("api/[controller]")]
     [ApiController]
     public class ContactListsController : ControllerBase
     {
         private readonly ILogger<ContactListsController> _logger;
-        private ApplicationDbContext _context;
-        private IMapper _mapper;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ContactListsController(ILogger<ContactListsController> logger, IMapper mapper, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ContactListsController(ILogger<ContactListsController> logger, IMapper mapper, ApplicationDbContext context)
         {
             _mapper = mapper;
             _logger = logger;
             _context = context;
-            _userManager = userManager;
         }
 
-        [HttpPost]
-        public IActionResult CreateContactList(ContactListDto contactListDto) 
+        // GET /api/contactLists/id
+        [HttpGet("{userId}")]
+        public IActionResult GetContactLists(string userId)
         {
-            var user = _context.WebsiteUsers.SingleOrDefault(u => u.Email == contactListDto.UserEmail);
+            var userContactLists = _context.ContactLists
+                .Where(u => u.User.Id == userId)
+                .ToList();
 
-            var contactList = new ContactList()
-            {
-                Name = contactListDto.Name,
-                Contacts = _context.Contacts
-                .Where(c=> 
-                    contactListDto.ContactIds.Contains(c.Id))
-                .ToList(),
-                User = user
-            };
-            
-            _context.ContactLists.Add(contactList);
+            var userContactListDtos = userContactLists
+               .Select(_mapper.Map<ContactList, ContactListDto>);
 
-            return Created(new Uri(Request.GetDisplayUrl() + "/" + contactList.Id), contactListDto);
+            return Ok(userContactListDtos);
         }
 
+
+        // DELETE /api/contactLists/Id
+        [HttpDelete("{id:int}")]
+        public IActionResult DeleteContactList(int id)
+        {
+            var contactListInDb = _context.ContactLists.SingleOrDefault(c => c.Id == id);
+
+            if (contactListInDb == null)
+                return NotFound();
+
+            _context.ContactLists.Remove(contactListInDb);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }

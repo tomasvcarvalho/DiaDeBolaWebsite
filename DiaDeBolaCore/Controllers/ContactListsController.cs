@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DiaDeBolaCore.Dtos;
 using DiaDeBolaCore.Models;
 using DiaDeBolaCore.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DiaDeBolaCore.Controllers
 {
     public class ContactListsController : Controller
     {
         private readonly ILogger<ContactListsController> _logger;
-        private ApplicationDbContext _context;
-        private IMapper _mapper;
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public ContactListsController(ILogger<ContactListsController> logger, IMapper mapper, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
@@ -46,23 +44,25 @@ namespace DiaDeBolaCore.Controllers
         public async Task<IActionResult> New()
         {
             var user = await _userManager.GetUserAsync(User);
-            var userContacts = _context.Contacts
+            var userContactDtos = _context.Contacts
             .Where(u => u.User.Id == user.Id)
+            .Select(_mapper.Map<Contact, ContactDto>)
             .ToList();
 
-            var userContactLists = _context.ContactLists
+            var userContactListDtos = _context.ContactLists
             .Where(u => u.User.Id == user.Id)
+            .Select(_mapper.Map<ContactList, ContactListDto>)
             .ToList();
 
             var viewModel = new ContactListsViewModel()
-        {
-            Contacts = userContacts,
-            ContactLists = userContactLists
+            {
+                Contacts = userContactDtos,
+                ContactLists = userContactListDtos
 
-        };
+            };
 
             return View("ContactListForm", viewModel);
-    }
+        }
 
 
         [HttpPost]
@@ -83,27 +83,25 @@ namespace DiaDeBolaCore.Controllers
             var user = await _userManager.GetUserAsync(User);
 
             var userContactLists = _context.ContactLists
-                .Where(u => u.Name == viewModel.Use)
+                .Where(u => u.Name == viewModel.Name)
                 .ToList();
 
-            if (userContacts.Count > 0)
-                return BadRequest("Contact already exists.");
+            if (userContactLists.Count > 0)
+                return BadRequest("Contact List with the same name already exists.");
 
-            var friend = _context.WebsiteUsers
-                .SingleOrDefault(u => u.Email == viewModel.FriendEmail);
 
-            var contact = new Contact()
+
+            var contactList = new ContactList()
             {
                 User = user,
-                Friend = friend
+                Contacts = viewModel.ContactDtos.Select(_mapper.Map<ContactDto, Contact>).ToList(),
+                NumberOfElements = viewModel.ContactDtos.Count
             };
 
-            _context.Contacts.Add(contact);
+            _context.ContactLists.Add(contactList);
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Contacts");
-
-
         }
     }
 }

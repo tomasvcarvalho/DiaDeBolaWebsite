@@ -1,13 +1,12 @@
-﻿using DiaDeBolaCore.Models;
+﻿using DiaDeBolaCore.Dtos;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DiaDeBolaCore.ViewModels
-{   public class EventFormViewModel
+{
+    public class EventFormViewModel
     {
         public int? Id { get; set; }
 
@@ -25,12 +24,12 @@ namespace DiaDeBolaCore.ViewModels
         [Required]
         public string Location { get; set; }
 
-        public IEnumerable<EventStatus> EventStatuses { get; set; }
+        public IEnumerable<EventStatusDto> EventStatuses { get; set; }
 
         [Required]
         public int? EventStatusId { get; set; }
 
-        public List<Team> Teams { get; set; }
+        public List<TeamDto> Teams { get; set; }
 
         public string Title
         {
@@ -45,15 +44,15 @@ namespace DiaDeBolaCore.ViewModels
             Id = 0;
         }
 
-        public EventFormViewModel(Event oevent)
+        public EventFormViewModel(EventDto eventDto)
         {
-            Id = oevent.Id;
-            Name = oevent.Name;
-            MaxNumberOfPlayers = oevent.MaxNumberOfPlayers;
-            DateTime = oevent.DateTime;
-            Location = oevent.Location;
-            EventStatusId = oevent.EventStatus.Id;
-            Teams = oevent.Teams;
+            Id = eventDto.Id;
+            Name = eventDto.Name;
+            MaxNumberOfPlayers = eventDto.MaxNumberOfPlayers;
+            DateTime = eventDto.DateTime;
+            Location = eventDto.Location;
+            EventStatusId = eventDto.EventStatus.Id;
+            Teams = eventDto.Teams;
         }
     }
 }

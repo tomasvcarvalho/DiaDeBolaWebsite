@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DiaDeBolaCore.Dtos;
 using DiaDeBolaCore.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace DiaDeBolaCore.Controllers.Api
 {
@@ -18,28 +13,19 @@ namespace DiaDeBolaCore.Controllers.Api
     public class EventsController : ControllerBase
     {
         private readonly ILogger<EventsController> _logger;
-        private ApplicationDbContext _context;
-        private IMapper _mapper;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public EventsController(ILogger<EventsController> logger, IMapper mapper, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public EventsController(ILogger<EventsController> logger, IMapper mapper, ApplicationDbContext context)
         {
             _mapper = mapper;
             _logger = logger;
             _context = context;
-            _userManager = userManager;
-        }
-
-        [HttpGet]
-        // GET api/events/
-        public IActionResult GetEvents() 
-        {
-            return Ok(_context.Events.ToList());
         }
 
 
-        [HttpGet("{id}")]
         // GET api/events/1
+        [HttpGet("{id}")]
         public IActionResult GetEvents(string id)
         {
             var userEvents = _context.Events
@@ -54,34 +40,17 @@ namespace DiaDeBolaCore.Controllers.Api
             return Ok(userEventDtos);
         }
 
-        [HttpPost]
-        // POST api/events/
-        public IActionResult CreateEvent(EventDto eventDto)
-        {
-            if (eventDto == null)
-                return BadRequest();
-
-
-            var eventToSave = _mapper.Map<EventDto, Event>(eventDto);
-
-            _context.Events.Add(eventToSave);
-
-            _context.SaveChanges();
-
-            return Ok(_context.Events.ToList());
-        }
-
 
         // DELETE /api/contacts/Id
         [HttpDelete("{id:int}")]
-        public IActionResult DeleteContact(int id)
+        public IActionResult DeleteEvent(int id)
         {
-            var eventInDb = _context.Contacts.SingleOrDefault(c => c.Id == id);
+            var eventInDb = _context.Events.SingleOrDefault(c => c.Id == id);
 
             if (eventInDb == null)
                 return NotFound();
 
-            _context.Contacts.Remove(eventInDb);
+            _context.Events.Remove(eventInDb);
             _context.SaveChanges();
             return Ok();
         }

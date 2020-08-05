@@ -1,6 +1,4 @@
-﻿using DiaDeBolaCore.Data;
-
-namespace DiaDeBolaCore.Models
+﻿namespace DiaDeBolaCore.Models
 {
     public class Player
     {

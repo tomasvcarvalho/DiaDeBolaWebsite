@@ -1,6 +1,6 @@
-﻿namespace DiaDeBolaCore.Models
+﻿namespace DiaDeBolaCore.Dtos
 {
-    public class EventStatus
+    public class EquipmentColorDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

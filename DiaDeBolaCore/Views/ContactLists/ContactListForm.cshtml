@@ -1,1 +1,127 @@
-﻿@model ContactListsViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewBag.Title = "Contact List Form";
+    var user = await UserManager.GetUserAsync(User);
+}
+
+
+<h2>@ViewBag.Title</h2>
+
+
+<form id="newContactList">
+    <div class="form-group">
+        <label>Add Contact to List</label>
+        <div class="tt-container">
+            <input id="contact" name="contact" data-rule-atLeastOneContact="true" type="text" value="" class="form-control" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 col-sm-4">
+            <ul id="contacts" class="list-group"></ul>
+        </div>
+    </div>
+    <button class="btn btn-primary">Submit</button>
+</form>
+
+
+@section scripts
+    {
+
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        $(document).ready(function () {
+            var vm = {
+                contactIds: []
+            };
+
+
+            var contacts = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/contacts/@user.Id?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $('#contact').typeahead({
+                hint: true,
+                minLength: 2,
+                highlight: true
+            }, {
+                name: 'contacts',
+                    display: function (contact) {
+                        return contact.friend.fullName;
+                    },
+                limit: Infinity,
+                source: contacts
+            }).on("typeahead:select", function (e, contact) {
+
+                if (vm.contactIds.includes(contact.id)) {
+                    toastr.error("Contact " + contact.friend.fullName + " is already listed!");
+                } else {
+                    $("#contacts").append("<li class='list-group-item'><button class='btn-link js-delete' data-contact-id=" + contact.id + ">Delete</button>" + contact.friend.fullName + "</li>");
+                    console.log("Added friend " + contact.friend.fullName + " with contactId " + contact.id);
+                    vm.contactIds.push(contact.id);
+                }
+                $("#contact").typeahead("val", "");
+                console.log(vm.contactIds);
+            });
+
+
+            $("#contacts").on("click", ".js-delete", function () {
+                var button = $(this);
+
+                bootbox.confirm("Remove this contact from list?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            success: function () {
+                                button.parents("li").remove();
+                                vm.contactIds = vm.contactIds.filter(function (item) {
+                                    return item != button.attr("data-contact-id");
+                                });
+                                console.log(vm.contactIds);
+                            }
+                        });
+                    }
+                });
+            });
+
+            
+            $.validator.addMethod("atLeastOneContact", function () {
+                return vm.contactIds.length > 0;
+            }, "Please select at least one contact to the new list.");
+            
+
+            var validator = $("#newContactList").validate({
+                submitHandler: function () {
+                    $.ajax({
+                        url: "/api/contactLists",
+                        method: "post",
+                        data: vm
+                    }).done(function () {
+                        toastr.success("Rentals successfully recorded.");
+                        $("#contact").typeahead("val", "");
+                        $("#contacts").empty();
+
+                        vm = { contactIds: [] };
+
+                        validator.resetForm();
+                    }).fail(function () {
+                        toastr.error("Something unexpected happened.");
+                    });
+
+                    return false;
+                }
+            });
+
+
+
+            
+        })
+    </script>
+}

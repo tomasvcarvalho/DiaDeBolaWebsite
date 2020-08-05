@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DiaDeBolaCore.Dtos;
 using DiaDeBolaCore.Models;
 using DiaDeBolaCore.ViewModels;
@@ -9,14 +6,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DiaDeBolaCore.Controllers
 {
     public class EventsController : Controller
     {
         private readonly ILogger<EventsController> _logger;
-        private ApplicationDbContext _context;
-        private IMapper _mapper;
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public EventsController(ILogger<EventsController> logger, IMapper mapper, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
@@ -62,29 +62,32 @@ namespace DiaDeBolaCore.Controllers
             if (oevent == null)
                 return NotFound();
 
-            var viewModel = new EventFormViewModel(oevent)
+
+
+            var viewModel = new EventFormViewModel(_mapper.Map<Event, EventDto>(oevent))
             {
-                EventStatuses = _context.EventStatus.ToList()
+                EventStatuses = _context.EventStatus.Select(_mapper.Map<EventStatus, EventStatusDto>)
             };
             return View("EventForm", viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Save(Event oevent)
+        public async Task<IActionResult> Save(EventDto eventDto)
         {
             if (!ModelState.IsValid)
             {
-                var viewModel = new EventFormViewModel(oevent)
+                var viewModel = new EventFormViewModel(eventDto)
                 {
-                    EventStatuses = _context.EventStatus.ToList()
+                    EventStatuses = _context.EventStatus.Select(_mapper.Map<EventStatus, EventStatusDto>)
                 };
                 return View("EventForm", viewModel);
             }
 
-            if (oevent.Id == 0)
+            if (eventDto.Id == 0)
             {
                 var user = await _userManager.GetUserAsync(User);
+                var oevent = _mapper.Map<EventDto, Event>(eventDto);
                 oevent.EventStatus = _context.EventStatus.SingleOrDefault(es => es.Name == Constants.EventStatusCreated);
                 oevent.Teams = new List<Team>()
                 {
@@ -114,12 +117,15 @@ namespace DiaDeBolaCore.Controllers
             }
             else
             {
-                var eventInDb = _context.Events.Single(e => e.Id == oevent.Id);
-                eventInDb.DateTime = oevent.DateTime;
-                eventInDb.EventStatusId = oevent.EventStatusId;
-                eventInDb.Location = oevent.Location;
-                eventInDb.Name = oevent.Name;
-                eventInDb.MaxNumberOfPlayers = oevent.MaxNumberOfPlayers;
+                var eventInDb = _context.Events.Single(e => e.Id == eventDto.Id);
+                _mapper.Map(eventDto, eventInDb);
+                /*
+                eventInDb.DateTime = eventDto.DateTime;
+                eventInDb.EventStatusId = eventDto.EventStatusId;
+                eventInDb.Location = eventDto.Location;
+                eventInDb.Name = eventDto.Name;
+                eventInDb.MaxNumberOfPlayers = eventDto.MaxNumberOfPlayers;
+                */
             }
 
             _context.SaveChanges();

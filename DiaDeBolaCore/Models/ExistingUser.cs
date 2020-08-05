@@ -1,11 +1,5 @@
-﻿using DiaDeBolaCore.Dtos;
-using DiaDeBolaCore.ViewModels;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DiaDeBolaCore.Models
 {
@@ -20,7 +14,7 @@ namespace DiaDeBolaCore.Models
 
             var userExists = _context.WebsiteUsers.Any(u => u.Email == friendsEmail);
 
-            return userExists ? ValidationResult.Success : 
+            return userExists ? ValidationResult.Success :
                 new ValidationResult("User is not registered in DiaDeBola.");
         }
     }

@@ -2,11 +2,14 @@
 
 namespace DiaDeBolaCore.Dtos
 {
-    public class ContactListDto
+    public class TeamDto
     {
         public int Id { get; set; }
+
         public string Name { get; set; }
-        public List<int> ContactIds { get; set; }
-        public string UserEmail { get; set; }
+
+        public EquipmentColorDto EquipmentColor { get; set; }
+
+        public List<PlayerDto> Players { get; set; }
     }
 }

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DiaDeBolaCore.Dtos;
 using DiaDeBolaCore.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 
 namespace DiaDeBolaCore.Controllers.Api
 {
@@ -19,66 +14,39 @@ namespace DiaDeBolaCore.Controllers.Api
     public class ContactsController : ControllerBase
     {
         private readonly ILogger<ContactsController> _logger;
-        private ApplicationDbContext _context;
-        private IMapper _mapper;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ContactsController(ILogger<ContactsController> logger, IMapper mapper, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ContactsController(ILogger<ContactsController> logger, IMapper mapper, ApplicationDbContext context)
         {
             _mapper = mapper;
             _logger = logger;
             _context = context;
-            _userManager = userManager;
         }
 
-        // GET /api/contacts/id
-        [HttpGet("{id}")]
-        public IActionResult GetContacts(string id) 
-        {
-            var userContacts = _context.Contacts
-                .Include(u => u.Friend)
-                .Where(u => u.User.Id == id)
-                .ToList();
 
-            var userContactDtos = userContacts
+        // GET /api/contacts/id
+        [HttpGet("{userId}")]
+        public IActionResult GetContacts(string userId, string query = null)
+        {
+            var userContactsQuery = _context.Contacts
+                .Include(u => u.Friend)
+                .Where(u => u.User.Id == userId);
+
+
+            var userContactDtos = userContactsQuery
                .Select(_mapper.Map<Contact, ContactDto>);
+
+            if (!String.IsNullOrWhiteSpace(query))
+                userContactDtos = userContactDtos.Where(c => c.Friend.FullName.Contains(query, StringComparison.InvariantCultureIgnoreCase));
 
             return Ok(userContactDtos);
         }
 
 
-        // POST /api/contacts/
-        [HttpPost]
-        public IActionResult CreateContact(ContactDto contactDto)
-        {
-            var existingUsers = _context.WebsiteUsers
-               .Where(u => u.Email == contactDto.Friend.Email)
-               .ToList();
-
-            if (existingUsers.Count == 0)
-                return BadRequest("Contact is not registered in DiaDeBola.");
-
-            var userContacts = _context.Contacts
-                .Where(u => u.User.Id == contactDto.UserId && u.Friend.Id == contactDto.FriendId)
-                .ToList();
-
-            if (userContacts.Count > 0)
-                return BadRequest("Contact already exists.");
-
-            var contact = _mapper.Map<ContactDto, Contact>(contactDto);
-            _context.Contacts.Add(contact);
-            _context.SaveChanges();
-
-            contactDto.Id = contact.Id;
-
-            return Created(new Uri(Request.GetDisplayUrl() + "/" + contact.Id), contactDto);
-        }
-
-
-
         // DELETE /api/contacts/Id
         [HttpDelete("{id:int}")]
-        public IActionResult DeleteContact(int id) 
+        public IActionResult DeleteContact(int id)
         {
             var contactInDb = _context.Contacts.SingleOrDefault(c => c.Id == id);
 
