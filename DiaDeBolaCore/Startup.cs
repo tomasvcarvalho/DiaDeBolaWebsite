@@ -45,7 +45,6 @@ namespace DiaDeBolaCore
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
-
             services.AddControllersWithViews();
             services.AddRazorPages();
 

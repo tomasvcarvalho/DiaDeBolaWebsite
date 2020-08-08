@@ -41,67 +41,9 @@ namespace DiaDeBolaCore.Controllers
         }
 
 
-        public async Task<IActionResult> New()
+        public IActionResult New()
         {
-            var user = await _userManager.GetUserAsync(User);
-            var userContactDtos = _context.Contacts
-            .Where(u => u.User.Id == user.Id)
-            .Select(_mapper.Map<Contact, ContactDto>)
-            .ToList();
-
-            var userContactListDtos = _context.ContactLists
-            .Where(u => u.User.Id == user.Id)
-            .Select(_mapper.Map<ContactList, ContactListDto>)
-            .ToList();
-
-            var viewModel = new ContactListsViewModel()
-            {
-                Contacts = userContactDtos,
-                ContactLists = userContactListDtos
-
-            };
-
-            return View("ContactListForm", viewModel);
-        }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Save(ContactListsFormViewModel viewModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                var newViewModel = new ContactListsFormViewModel()
-                {
-                    Id = viewModel.Id,
-                    Name = viewModel.Name,
-                    ContactDtos = viewModel.ContactDtos
-                };
-                return View("ContactListForm", viewModel);
-            }
-
-            var user = await _userManager.GetUserAsync(User);
-
-            var userContactLists = _context.ContactLists
-                .Where(u => u.Name == viewModel.Name)
-                .ToList();
-
-            if (userContactLists.Count > 0)
-                return BadRequest("Contact List with the same name already exists.");
-
-
-
-            var contactList = new ContactList()
-            {
-                User = user,
-                Contacts = viewModel.ContactDtos.Select(_mapper.Map<ContactDto, Contact>).ToList(),
-                NumberOfElements = viewModel.ContactDtos.Count
-            };
-
-            _context.ContactLists.Add(contactList);
-            _context.SaveChanges();
-
-            return RedirectToAction("Index", "Contacts");
+            return View("ContactListForm");
         }
     }
 }

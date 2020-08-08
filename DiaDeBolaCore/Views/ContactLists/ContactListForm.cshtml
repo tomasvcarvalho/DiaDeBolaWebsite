@@ -12,6 +12,14 @@
 
 <form id="newContactList">
     <div class="form-group">
+        <label>Contact List Name</label>
+        <div class="tt-container">
+            <input id="contactListName" name="contactListName" required type="text" value="" class="form-control" />
+        </div>
+    </div>
+
+
+    <div class="form-group">
         <label>Add Contact to List</label>
         <div class="tt-container">
             <input id="contact" name="contact" data-rule-atLeastOneContact="true" type="text" value="" class="form-control" />
@@ -23,7 +31,7 @@
             <ul id="contacts" class="list-group"></ul>
         </div>
     </div>
-    <button class="btn btn-primary">Submit</button>
+    <button class="btn btn-primary" type="submit">Submit</button>
 </form>
 
 
@@ -35,6 +43,7 @@
     <script>
         $(document).ready(function () {
             var vm = {
+                name: "",
                 contactIds: []
             };
 
@@ -91,37 +100,39 @@
                 });
             });
 
-            
+
             $.validator.addMethod("atLeastOneContact", function () {
                 return vm.contactIds.length > 0;
             }, "Please select at least one contact to the new list.");
-            
+
 
             var validator = $("#newContactList").validate({
                 submitHandler: function () {
+                    console.log("submitting");
+                    vm.name = $("#contactListName").val();
                     $.ajax({
-                        url: "/api/contactLists",
+                        url: "/api/contactLists?userId=@user.Id",
                         method: "post",
-                        data: vm
+                        contentType: "application/json",
+                        data: JSON.stringify(vm)
                     }).done(function () {
-                        toastr.success("Rentals successfully recorded.");
+                        toastr.success("Contact List successfully recorded.");
                         $("#contact").typeahead("val", "");
                         $("#contacts").empty();
 
-                        vm = { contactIds: [] };
+                        vm = { name: "", contactIds: [] };
 
                         validator.resetForm();
                     }).fail(function () {
                         toastr.error("Something unexpected happened.");
                     });
-
                     return false;
                 }
             });
 
 
 
-            
+
         })
     </script>
 }

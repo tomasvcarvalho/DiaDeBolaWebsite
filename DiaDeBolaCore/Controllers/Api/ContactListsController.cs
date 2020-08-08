@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using DiaDeBolaCore.Dtos;
 using DiaDeBolaCore.Models;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 
 namespace DiaDeBolaCore.Controllers.Api
@@ -50,6 +52,34 @@ namespace DiaDeBolaCore.Controllers.Api
             _context.ContactLists.Remove(contactListInDb);
             _context.SaveChanges();
             return Ok();
+        }
+
+
+        // POST /api/contactLists
+        [HttpPost]
+        public IActionResult CreateContactList(string userId, ContactListDto contactListDto)
+        {
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+
+
+            var contactList = new ContactList()
+            {
+                Name = contactListDto.Name,
+                NumberOfElements = contactListDto.ContactIds.Count(),
+                User = _context.WebsiteUsers.SingleOrDefault(u => u.Id == userId),
+                Contacts = _context.Contacts.Where(c => contactListDto.ContactIds.Contains(c.Id)).ToList()
+            };
+            _context.ContactLists.Add(contactList);
+
+
+
+            _context.SaveChanges();
+
+            contactListDto.Id = contactList.Id;
+            return Created(new Uri(Request.GetEncodedUrl() + "/" + contactList.Id), contactListDto);
         }
     }
 }

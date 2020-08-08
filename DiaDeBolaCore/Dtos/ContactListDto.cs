@@ -6,7 +6,6 @@ namespace DiaDeBolaCore.Dtos
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<int> ContactIds { get; set; }
-        public string UserEmail { get; set; }
+        public IEnumerable<int> ContactIds { get; set; }
     }
 }
